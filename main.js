@@ -34,12 +34,19 @@ function readDirSync(path,arr){
 
 var show=`${msg.head}`
 var array=msg.catalogue;
+var pathFile="";
  for(let i=0;i<array.length;i++){
-     if(array[i][0]=="dir"&& i>=1){ show+=`\n</ol>\n\n## ${array[i][1]}\n\n<ol>\n` }
-     else if(array[i][0]=="dir"){show+=`\n\n## ${array[i][1]}\n\n<ol>\n`}
+     if(array[i][0]=="dir"&& i>=1){ 
+        show+=`\n</ol>\n\n## ${array[i][1]}\n\n<ol>\n`
+        pathFile=array[i][1]
+     }
+     else if(array[i][0]=="dir"){
+        show+=`\n\n## ${array[i][1]}\n\n<ol>\n`
+        pathFile=array[i][1]
+        }
      else if(array[i][1]!="main.js"&& array[i][1]!="README.md"){ 
          let sub=array[i][1].substring(0,array[i][1].length-".md".length);
-         show+=`\n<li>\n\n[${sub}](${array[i-1][1]}/${array[i][1]})\n`
+         show+=`\n<li>\n\n[${sub}](${pathFile}/${array[i][1]})\n`
      }
  } 
 
