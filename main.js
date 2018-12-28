@@ -1,48 +1,59 @@
-
 var fs = require('fs'); 
 
 var msg ={
     head:`# Noto
-    学的再多也会忘，记录自己解决的过程，善于总结。
-    学习遇到各种问题和学习过程中思考的记录下来`,
-    catalogue:[]//目录
+学的再多也会忘，记录自己解决的过程，善于总结。
+学习遇到各种问题和学习过程中思考的记录下来 (\`main.js\` 是基于nodejs 快速生成目录的脚本)`,
+    catalogue:[],//目录
+    possible:[ //接下来 可能要记录的内容
+    'git',"vscode",'Go',"Mysql", "python", "Javascript", 
+    "Vim", "centos7", "deepin", "Markdown", "Php"] 
 
-} ;//初始化目录头
+} ; 
 
 
 var path = require("path")
  
 var root = path.join(__dirname)
-
-
  
-
 readDirSync(root,msg.catalogue)
 function readDirSync(path,arr){
 	var pa = fs.readdirSync(path,arr);
-	pa.forEach(function(ele,index){
+	pa.forEach(function(ele,index){ 
+      if(ele!=".git"){ 
         var info = fs.statSync(path+"/"+ele)
 		if(info.isDirectory()){
             arr.push(['dir',ele])
 			readDirSync(path+"/"+ele,arr);
 		}else{
-            arr.push(['file',ele])
-			// console.log("file: "+ele)
+            arr.push(['file',ele]) 
         }	 
+      }  
 	})
 } 
 
+var show=`${msg.head}`
+var array=msg.catalogue;
+ for(let i=0;i<array.length;i++){
+     if(array[i][0]=="dir"&& i>=1){ show+=`\n</ol>\n\n## ${array[i][1]}\n\n<ol>\n` }
+     else if(array[i][0]=="dir"){show+=`\n\n## ${array[i][1]}\n\n<ol>\n`}
+     else if(array[i][1]!="main.js"&& array[i][1]!="README.md"){
+         show+=`\n<li>\n\n[${array[i][1]}](${array[i-1][1]}/${array[i][1]})\n`
+     }
+ } 
 
-
-console.log(msg)
-// 调用fs.writeFile()进行文件写入,这是一个异步操作
-fs.writeFile('./README.md', msg, 'utf8', function (err) {
+/** 调用fs.writeFile()进行文件写入,这是一个异步操作*/
+fs.writeFile('./README.md', show, 'utf8', function (err) {
   // 在这个回调函数中只有一个参数，那就是err
   // 如果 err === null，表示文件写入成功，没有错误
   // 如果err不等于null，就表示文件写入失败了
   if (err) { console.log('文件写入错误，错误是：'+ err); }
   console.log('run ok') 
 });
+
+
+
+
 
 // /**  异步读取文件 */
 // fs.readFile('./README.md',function(err,data){
